@@ -1,0 +1,107 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+  }
+  
+  .container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1, h3 {
+    text-align: center;
+    color: #444;
+  }
+  
+  p {
+    text-align: center;
+    color: #555;
+  }
+  
+  /* Estilo do botão */
+  button {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #28a745;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Estilo para os links */
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Estilo do iframe */
+  iframe {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    border: 0;
+  }
+  
+  /* Estilos para os campos de input */
+  input[type="text"] {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  input[type="text"]:focus {
+    border-color: #007bff;
+  }
+  
+  /* Mensagens de erro */
+  .error-message {
+    color: #ff4d4d;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  /* Mensagens de sucesso */
+  .success-message {
+    color: #28a745;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
