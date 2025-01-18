@@ -147,9 +147,10 @@ function App() {
           </form>
 
           {/* Display Video after Link is Valid */}
+          <h3 className="text-center text-gray-800 mb-2">Video Preview</h3>
       {isVideoReady && (
         <div className="mt-6 flex justify-center items-center">
-        <h3 className="text-center text-gray-800 mb-2">Video Preview</h3>
+        
         <br/>
         <iframe
           width="560"
