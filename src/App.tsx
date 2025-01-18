@@ -147,19 +147,19 @@ function App() {
           </form>
 
           {/* Display Video after Link is Valid */}
-          {isVideoReady && (
-            <div className="mt-6">
-              <h3 className="text-center text-gray-800 mb-2">Video Preview</h3>
-              <iframe
-                width="560"
-                height="315"
-                src={getEmbedUrl(url)}
-                title="Video"
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
-            </div>
-          )}
+      {isVideoReady && (
+        <div className="mt-6 flex justify-center items-center">
+        <h3 className="text-center text-gray-800 mb-2">Video Preview</h3>
+        <iframe
+          width="560"
+          height="315"
+          src={getEmbedUrl(url)}
+          title="Video"
+          frameBorder="0"
+          allowFullScreen
+    ></iframe>
+  </div>
+)}
 
           {/* Result Section */}
           {showResult && (
