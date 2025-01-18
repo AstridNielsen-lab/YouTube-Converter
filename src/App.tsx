@@ -177,6 +177,38 @@ function App() {
             </div>
           )}
         </div>
+          {/* Contact Information */}
+        <div className="mt-12 bg-white rounded-2xl shadow-xl p-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Contact Information</h2>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <Phone className="h-5 w-5 text-blue-600" />
+              <a 
+                href="https://wa.me/5511970603441" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-blue-600"
+              >
+                +55 11 97060-3441
+              </a>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Mail className="h-5 w-5 text-blue-600" />
+              <a 
+                href="mailto:contact@likelook.solutions" 
+                className="text-gray-600 hover:text-blue-600"
+              >
+                contact@likelook.solutions
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-12 text-center text-gray-600">
+          <p>Developed by Julio Campos Machado - Full Stack Developer</p>
+          <p className="mt-2">© 2024 Like Look Solutions. All rights reserved.</p>
+        </footer>
       </main>
     </div>
   );
