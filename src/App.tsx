@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Youtube, Download, ExternalLink } from 'lucide-react';
+import { Youtube, Download, ExternalLink, Phone, Mail } from 'lucide-react';
 
 function App() {
   const [url, setUrl] = useState('');
@@ -9,26 +9,18 @@ function App() {
   const [downloadLink, setDownloadLink] = useState('');
   const [isVideoReady, setIsVideoReady] = useState(false);
 
-  // Função para verificar se o link é válido do YouTube
-  const isValidYouTubeLink = (link: string) => {
+  const isValidYouTubeLink = (link) => {
     const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtube\.com)\/watch\?v=[\w\-]+/;
     return regex.test(link);
   };
 
-  // Função para exibir o vídeo automaticamente quando o link for colado
-  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLinkChange = (e) => {
     const newLink = e.target.value;
     setUrl(newLink);
-
-    // Verifica se o link é válido
-    if (isValidYouTubeLink(newLink)) {
-      setIsVideoReady(true);
-    } else {
-      setIsVideoReady(false);
-    }
+    setIsVideoReady(isValidYouTubeLink(newLink));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
 
@@ -41,12 +33,10 @@ function App() {
         body: JSON.stringify({ url, format }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to process the request');
-      }
+      if (!response.ok) throw new Error('Failed to process the request');
 
       const data = await response.json();
-      setDownloadLink(data.downloadLink); // Espera que o backend retorne um link de download
+      setDownloadLink(data.downloadLink);
       setShowResult(true);
     } catch (error) {
       console.error('Error:', error);
@@ -56,8 +46,7 @@ function App() {
     }
   };
 
-  // Função para gerar o link de embed do vídeo
-  const getEmbedUrl = (url: string) => {
+  const getEmbedUrl = (url) => {
     const videoId = url.split('v=')[1];
     return `https://www.youtube.com/embed/${videoId}`;
   };
@@ -72,9 +61,9 @@ function App() {
               <Youtube className="h-8 w-8 text-blue-600" />
               <span className="text-xl font-semibold text-gray-800">Video Converter</span>
             </div>
-            <a 
-              href="https://likelook.wixsite.com/solutions" 
-              target="_blank" 
+            <a
+              href="https://likelook.wixsite.com/solutions"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-700 flex items-center space-x-1"
             >
@@ -96,7 +85,6 @@ function App() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* URL Input */}
             <div>
               <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
                 YouTube URL
@@ -111,8 +99,6 @@ function App() {
                 required
               />
             </div>
-
-            {/* Format Selection */}
             <div>
               <label htmlFor="format" className="block text-sm font-medium text-gray-700 mb-2">
                 Select Format
@@ -128,8 +114,6 @@ function App() {
                 <option value="avi">AVI (Video)</option>
               </select>
             </div>
-
-            {/* Convert Button */}
             <button
               type="submit"
               disabled={isProcessing}
@@ -145,8 +129,6 @@ function App() {
               )}
             </button>
           </form>
-
-          {/* Display Video after Link is Valid */}
           {isVideoReady && (
             <div className="mt-6">
               <h3 className="text-center text-gray-800 mb-2">Video Preview</h3>
@@ -160,8 +142,6 @@ function App() {
               ></iframe>
             </div>
           )}
-
-          {/* Result Section */}
           {showResult && (
             <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-200">
               <p className="text-green-800 font-medium mb-2">Conversion Complete!</p>
@@ -177,7 +157,40 @@ function App() {
             </div>
           )}
         </div>
-               </main>
+
+        {/* Contact Information */}
+        <div className="mt-12 bg-white rounded-2xl shadow-xl p-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Contact Information</h2>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <Phone className="h-5 w-5 text-blue-600" />
+              <a
+                href="https://wa.me/5511970603441"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-blue-600"
+              >
+                +55 11 97060-3441
+              </a>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Mail className="h-5 w-5 text-blue-600" />
+              <a
+                href="mailto:contact@likelook.solutions"
+                className="text-gray-600 hover:text-blue-600"
+              >
+                contact@likelook.solutions
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="mt-12 text-center text-gray-600">
+        <p>Developed by Julio Campos Machado - Full Stack Developer</p>
+        <p className="mt-2">© 2024 Like Look Solutions. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
