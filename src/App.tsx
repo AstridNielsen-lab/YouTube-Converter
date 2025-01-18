@@ -21,31 +21,38 @@ function App() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsProcessing(true);
+    e.preventDefault();
+    setIsProcessing(true);
 
-  try {
-    const response = await fetch('http://localhost:3000/convert', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer AGluJ3MwRQIhANUOtyzANKBfQRXfFd3WFdDeAW7uyunBj2ExJ7rzXT2-AiBDGMRlV6Av3bMtgRd1r0CYsh2YKBu0cYZmMFn1jSCMbw==',
-      },
-      body: JSON.stringify({ url, format }),
-    });
+    try {
+      const response = await fetch('http://localhost:3000/convert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer AGluJ3MwRQIhANUOtyzANKBfQRXfFd3WFdDeAW7uyunBj2ExJ7rzXT2-AiBDGMRlV6Av3bMtgRd1r0CYsh2YKBu0cYZmMFn1jSCMbw==',
+        },
+        body: JSON.stringify({ url, format }),
+      });
 
-    if (!response.ok) throw new Error('Failed to process the request');
+      if (!response.ok) throw new Error('Failed to process the request');
 
-    const data = await response.json();
-    setDownloadLink(data.downloadLink);
-    setShowResult(true);
-  } catch (error) {
-    console.error('Error:', error);
-    alert('An error occurred while processing the request. Please try again.');
-  } finally {
-    setIsProcessing(false);
-  }
-};
+      const data = await response.json();
+      setDownloadLink(data.downloadLink);
+      setShowResult(true);
+
+      // Trigger automatic download after the result
+      const link = document.createElement('a');
+      link.href = data.downloadLink;
+      link.download = 'converted_video'; // Optional: You can change this to a specific file name
+      link.click(); // Programmatically trigger the download
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while processing the request. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const getEmbedUrl = (url) => {
     const videoId = url.split('v=')[1];
     return `https://www.youtube.com/embed/${videoId}`;
@@ -145,15 +152,8 @@ function App() {
           {showResult && (
             <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-200">
               <p className="text-green-800 font-medium mb-2">Conversion Complete!</p>
-              <a
-                href={downloadLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center space-x-2"
-              >
-                <Download className="h-5 w-5" />
-                <span>Download File</span>
-              </a>
+              {/* The download link is triggered automatically */}
+              <p className="text-gray-800">Your download is starting...</p>
             </div>
           )}
         </div>
