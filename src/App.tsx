@@ -21,31 +21,31 @@ function App() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsProcessing(true);
+  e.preventDefault();
+  setIsProcessing(true);
 
-    try {
-      const response = await fetch('http://localhost:3000/convert', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url, format }),
-      });
+  try {
+    const response = await fetch('http://localhost:3000/convert', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer AGluJ3MwRQIhANUOtyzANKBfQRXfFd3WFdDeAW7uyunBj2ExJ7rzXT2-AiBDGMRlV6Av3bMtgRd1r0CYsh2YKBu0cYZmMFn1jSCMbw==',
+      },
+      body: JSON.stringify({ url, format }),
+    });
 
-      if (!response.ok) throw new Error('Failed to process the request');
+    if (!response.ok) throw new Error('Failed to process the request');
 
-      const data = await response.json();
-      setDownloadLink(data.downloadLink);
-      setShowResult(true);
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while processing the request. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
+    const data = await response.json();
+    setDownloadLink(data.downloadLink);
+    setShowResult(true);
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while processing the request. Please try again.');
+  } finally {
+    setIsProcessing(false);
+  }
+};
   const getEmbedUrl = (url) => {
     const videoId = url.split('v=')[1];
     return `https://www.youtube.com/embed/${videoId}`;
