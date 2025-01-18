@@ -1,20 +1,65 @@
 import React, { useState } from 'react';
-import { Youtube, Download, Phone, Mail, ExternalLink } from 'lucide-react';
+import { Youtube, Download, ExternalLink } from 'lucide-react';
 
 function App() {
   const [url, setUrl] = useState('');
   const [format, setFormat] = useState('mp3');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [downloadLink, setDownloadLink] = useState('');
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Função para verificar se o link é válido do YouTube
+  const isValidYouTubeLink = (link: string) => {
+    const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtube\.com)\/watch\?v=[\w\-]+/;
+    return regex.test(link);
+  };
+
+  // Função para exibir o vídeo automaticamente quando o link for colado
+  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newLink = e.target.value;
+    setUrl(newLink);
+
+    // Verifica se o link é válido
+    if (isValidYouTubeLink(newLink)) {
+      setIsVideoReady(true);
+    } else {
+      setIsVideoReady(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    // Simulate processing
-    setTimeout(() => {
-      setIsProcessing(false);
+
+    try {
+      const response = await fetch('http://localhost:3000/convert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url, format }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to process the request');
+      }
+
+      const data = await response.json();
+      setDownloadLink(data.downloadLink); // Espera que o backend retorne um link de download
       setShowResult(true);
-    }, 2000);
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while processing the request. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Função para gerar o link de embed do vídeo
+  const getEmbedUrl = (url: string) => {
+    const videoId = url.split('v=')[1];
+    return `https://www.youtube.com/embed/${videoId}`;
   };
 
   return (
@@ -60,7 +105,7 @@ function App() {
                 type="url"
                 id="url"
                 value={url}
-                onChange={(e) => setUrl(e.target.value)}
+                onChange={handleLinkChange}
                 placeholder="Paste your YouTube video URL here"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 required
@@ -101,53 +146,37 @@ function App() {
             </button>
           </form>
 
+          {/* Display Video after Link is Valid */}
+          {isVideoReady && (
+            <div className="mt-6">
+              <h3 className="text-center text-gray-800 mb-2">Video Preview</h3>
+              <iframe
+                width="560"
+                height="315"
+                src={getEmbedUrl(url)}
+                title="Video"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
+
           {/* Result Section */}
           {showResult && (
             <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-200">
               <p className="text-green-800 font-medium mb-2">Conversion Complete!</p>
-              <button
+              <a
+                href={downloadLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center space-x-2"
-                onClick={() => setShowResult(false)}
               >
                 <Download className="h-5 w-5" />
                 <span>Download File</span>
-              </button>
+              </a>
             </div>
           )}
         </div>
-
-        {/* Contact Information */}
-        <div className="mt-12 bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Contact Information</h2>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <Phone className="h-5 w-5 text-blue-600" />
-              <a 
-                href="https://wa.me/5511970603441" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue-600"
-              >
-                +55 11 97060-3441
-              </a>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Mail className="h-5 w-5 text-blue-600" />
-              <a 
-                href="mailto:contact@likelook.solutions" 
-                className="text-gray-600 hover:text-blue-600"
-              >
-                contact@likelook.solutions
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <footer className="mt-12 text-center text-gray-600">
-          <p>Developed by Julio Campos Machado - Full Stack Developer</p>
-          <p className="mt-2">© 2024 Like Look Solutions. All rights reserved.</p>
-        </footer>
       </main>
     </div>
   );
