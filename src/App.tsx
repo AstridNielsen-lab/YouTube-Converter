@@ -8,6 +8,7 @@ function App() {
   const [showResult, setShowResult] = useState(false);
   const [downloadLink, setDownloadLink] = useState('');
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); // Novo estado para armazenar a mensagem de erro
 
   const isValidYouTubeLink = (link) => {
     const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtube\.com)\/watch\?v=[\w\-]+/;
@@ -23,6 +24,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
+    setErrorMessage(''); // Limpar a mensagem de erro antes de tentar a conversão
 
     try {
       const response = await fetch('http://localhost:3000/convert', {
@@ -39,15 +41,9 @@ function App() {
       const data = await response.json();
       setDownloadLink(data.downloadLink);
       setShowResult(true);
-
-      // Trigger automatic download after the result
-      const link = document.createElement('a');
-      link.href = data.downloadLink;
-      link.download = 'converted_video'; // Optional: You can change this to a specific file name
-      link.click(); // Programmatically trigger the download
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while processing the request. Please try again.');
+      setErrorMessage(error.message); // Armazenar a mensagem de erro
     } finally {
       setIsProcessing(false);
     }
@@ -121,7 +117,6 @@ function App() {
                 <option value="avi">AVI (Video)</option>
               </select>
             </div>
-            <center>
             <button
               type="submit"
               disabled={isProcessing}
@@ -136,8 +131,8 @@ function App() {
                 </>
               )}
             </button>
-              </center>
           </form>
+
           {isVideoReady && (
             <div className="mt-6">
               <h3 className="text-center text-gray-800 mb-2">Video Preview</h3>
@@ -151,11 +146,27 @@ function App() {
               ></iframe>
             </div>
           )}
+
           {showResult && (
             <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-200">
               <p className="text-green-800 font-medium mb-2">Conversion Complete!</p>
-              {/* The download link is triggered automatically */}
-              <p className="text-gray-800">Your download is starting...</p>
+              <a
+                href={downloadLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center space-x-2"
+              >
+                <Download className="h-5 w-5" />
+                <span>Download File</span>
+              </a>
+            </div>
+          )}
+
+          {/* Error Message Box */}
+          {errorMessage && (
+            <div className="mt-8 p-4 bg-red-50 rounded-lg border border-red-200">
+              <p className="text-red-800 font-medium mb-2">Error Occurred:</p>
+              <p className="text-red-600">{errorMessage}</p>
             </div>
           )}
         </div>
@@ -178,10 +189,10 @@ function App() {
             <div className="flex items-center space-x-3">
               <Mail className="h-5 w-5 text-blue-600" />
               <a
-                href="mailto:juliocamposmachado@gmail.com"
+                href="mailto:contact@likelook.solutions"
                 className="text-gray-600 hover:text-blue-600"
               >
-                juliocamposmachado@gmail.com
+                contact@likelook.solutions
               </a>
             </div>
           </div>
