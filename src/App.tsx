@@ -121,6 +121,7 @@ function App() {
                 <option value="avi">AVI (Video)</option>
               </select>
             </div>
+            <center>
             <button
               type="submit"
               disabled={isProcessing}
@@ -135,6 +136,7 @@ function App() {
                 </>
               )}
             </button>
+              </center>
           </form>
           {isVideoReady && (
             <div className="mt-6">
